@@ -24,6 +24,6 @@
     "errors",
     "JSON"
   ],
-  "private": "false",
+  "private": false,
   "license": "MIT"
 }
