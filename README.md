@@ -46,7 +46,7 @@ res.error(404, {message: 'Ooh, we couldn\'t find that.', hidden: 'foo'});
 
 res.error(404, {message: 'Masked message', hidden: 'foo'}, 'Ooh, we couldn\'t find that.');
 
-res.error({code: 404, message: 'Ooh, we couldn\'t find that.', hidden: 'foo');
+res.error({code: 404, message: 'Ooh, we couldn\'t find that.', hidden: 'foo'});
 
 ```
 
