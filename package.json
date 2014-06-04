@@ -11,9 +11,10 @@
     "email": "shiem.edelbrock@thecontrolgroup.com"
   }],
   "main": "res-error.js",
-  "reposetory": {
+  "homepage": "https://github.com/the-control-group/res-error",
+  "repository": {
     "type": "git",
-    "url": "https://github.com/the-control-group/res-error"
+    "url": "https://github.com/the-control-group/res-error.git"
   },
   "bugs": {
     "url": "https://github.com/the-control-group/res-error/issues"
