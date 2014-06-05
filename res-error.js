@@ -73,7 +73,7 @@ module.exports = function(req, res, next){
 		// find the code
 		if(a && typeof a == 'number')
 			code = a;
-		else if(err & err.code && typeof err.code == 'number')
+		else if(err && err.code && typeof err.code == 'number')
 			code = err.code;
 
 		// find the message
