@@ -1,15 +1,18 @@
 {
   "name": "res-error",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Adds a super flexible res.error() method to express that logs an error and sends the correct JSON response to the client",
   "author": "Mike Marcacci <mike.marcacci@thecontrolgroup.com>",
-  "contributors": [{
-    "name": "Mike Marcacci",
-    "email": "mike.marcacci@gmail.com"
-  }, {
-    "name": "Shiem Edelbrock",
-    "email": "shiem.edelbrock@thecontrolgroup.com"
-  }],
+  "contributors": [
+    {
+      "name": "Mike Marcacci",
+      "email": "mike.marcacci@gmail.com"
+    },
+    {
+      "name": "Shiem Edelbrock",
+      "email": "shiem.edelbrock@thecontrolgroup.com"
+    }
+  ],
   "main": "res-error.js",
   "homepage": "https://github.com/the-control-group/res-error",
   "repository": {
