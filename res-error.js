@@ -56,54 +56,65 @@ var error_codes = {
 	510 : 'Not Extended'
 }
 
-module.exports = function(req, res, next){
+function resError(config) {
+	return function(req, res, next){
 
-	// time the request
-	req.start = req.start || process.hrtime();
+		// time the request
+		req.start = req.start || process.hrtime();
 
-	res.error = function error(a, b, c){
-		var code, err, message;
+		res.error = function error(a, b, c){
+			var code, err, message;
 
-		// find the err in the args
-		if(a && typeof a != 'number')
-			err = a;
-		else if(b && typeof b != 'number')
-			err = b;
+			// find the err in the args
+			if(a && typeof a != 'number')
+				err = a;
+			else if(b && typeof b != 'number')
+				err = b;
 
-		// find the code
-		if(a && typeof a == 'number')
-			code = a;
-		else if(err && err.code && typeof err.code == 'number')
-			code = err.code;
+			// find the code
+			if(a && typeof a == 'number')
+				code = a;
+			else if(err && err.code && typeof err.code == 'number')
+				code = err.code;
 
-		// find the message
-		if(c)
-			message = c;
-		else if(typeof err == 'string')
-			message = err;
-		else if(err && err.message)
-			message = err.message;
-		else if(code)
-			message = error_codes[code];
+			// find the message
+			if(c)
+				message = c;
+			else if(typeof err == 'string')
+				message = err;
+			else if(err && err.message)
+				message = err.message;
+			else if(code)
+				message = error_codes[code];
 
-		// fallback to defaults
-		if(!code)
-			code = 500;
-		if(!err)
-			err = error_codes[code];
-		if(!message)
-			message = error_codes[code];
+			// fallback to defaults
+			if(!code)
+				code = 500;
+			if(!err)
+				err = error_codes[code];
+			if(!message)
+				message = error_codes[code];
 
-		// coerce the message to an object
-		if(typeof message == 'string')
-			message = {message: message}
+			// coerce the message to an object
+			if(typeof message == 'string')
+				message = {message: message}
 
-		// log the error
-		console.error(err);
+			// log the error
+			if(config.log)
+				console.error(err);
 
-		// send the response
-		res.send(code, message);
+			// send the response
+			res.send(code, message);
+		};
+		
+		next();
 	};
-	
-	next();
-};
+}
+
+module.exports = function(){
+	if(arguments.length === 1)
+		return resError(arguments[0]);
+
+	return resError({log: true}).apply(this, arguments);
+}
+
