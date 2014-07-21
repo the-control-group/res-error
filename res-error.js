@@ -105,6 +105,7 @@ function resError(config) {
 
 			// send the response
 			res.send(code, message);
+			return { code: code, message: message };
 		};
 		
 		next();
