@@ -1,6 +1,6 @@
 {
   "name": "res-error",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Adds a super flexible res.error() method to express that logs an error and sends the correct JSON response to the client",
   "author": "Mike Marcacci <mike.marcacci@thecontrolgroup.com>",
   "contributors": [
