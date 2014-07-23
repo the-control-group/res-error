@@ -1,3 +1,5 @@
+var util = require('util');
+
 var error_codes = {
 	100 : 'Continue',
 	101 : 'Switching Protocols',
@@ -56,6 +58,50 @@ var error_codes = {
 	510 : 'Not Extended'
 }
 
+function ApiError(a, b, c) {
+
+	this.code;
+	this.err;
+	this.message;
+	this.stack = new Error().stack;
+
+	// find the err in the args
+	if(a && typeof a != 'number')
+		this.err = a;
+	else if(b && typeof b != 'number')
+		this.err = b;
+
+	// find the code
+	if(a && typeof a == 'number')
+		this.code = a;
+	else if(this.err && this.err.code && typeof this.err.code == 'number')
+		this.code = this.err.code;
+
+	// find the message
+	if(c)
+		this.message = c;
+	else if(typeof this.err == 'string')
+		this.message = this.err;
+	else if(this.err && this.err.message)
+		this.message = this.err.message;
+	else if(this.code)
+		this.message = error_codes[this.code];
+
+	// fallback to defaults
+	if(!this.code)
+		this.code = 500;
+	if(!this.err)
+		this.err = error_codes[this.code];
+	if(!this.message)
+		this.message = error_codes[this.code];
+
+	// coerce the message to an object
+	if(typeof this.message == 'string')
+		this.message = {message: this.message}
+}
+
+util.inherits(ApiError, Error);
+
 function resError(config) {
 	return function(req, res, next){
 
@@ -63,49 +109,17 @@ function resError(config) {
 		req.start = req.start || process.hrtime();
 
 		res.error = function error(a, b, c){
-			var code, err, message;
+			var e;
 
-			// find the err in the args
-			if(a && typeof a != 'number')
-				err = a;
-			else if(b && typeof b != 'number')
-				err = b;
-
-			// find the code
-			if(a && typeof a == 'number')
-				code = a;
-			else if(err && err.code && typeof err.code == 'number')
-				code = err.code;
-
-			// find the message
-			if(c)
-				message = c;
-			else if(typeof err == 'string')
-				message = err;
-			else if(err && err.message)
-				message = err.message;
-			else if(code)
-				message = error_codes[code];
-
-			// fallback to defaults
-			if(!code)
-				code = 500;
-			if(!err)
-				err = error_codes[code];
-			if(!message)
-				message = error_codes[code];
-
-			// coerce the message to an object
-			if(typeof message == 'string')
-				message = {message: message}
-
-			// log the error
-			if(config.log)
-				console.error(err);
+			// build the error object
+			if(a instanceof ApiError)
+				e = a;
+			else
+				e = new ApiError(a, b, c);
 
 			// send the response
-			res.send(code, message);
-			return { code: code, message: message };
+			res.send(e.code, e.message);
+			return e;
 		};
 		
 		next();
@@ -118,4 +132,7 @@ module.exports = function(){
 
 	return resError({log: true}).apply(this, arguments);
 }
+
+module.exports.ApiError = ApiError;
+
 
