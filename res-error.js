@@ -118,7 +118,7 @@ function resError(config) {
 				e = new ApiError(a, b, c);
 
 			// send the response
-			res.send(e.code, e.message);
+			res.status(e.code).send(e.message);
 			return e;
 		};
 		
